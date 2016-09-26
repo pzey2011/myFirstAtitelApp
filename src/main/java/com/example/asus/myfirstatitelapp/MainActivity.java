@@ -4,6 +4,9 @@ import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements WeatherServiceCal
     private TextView temperatureView;
     private TextView conditionView;
     private TextView locationView;
+    private EditText changeCity;
+    private Button okButton;
     private YahooWeatherService service;
     private ProgressDialog dialog;
 
@@ -32,13 +37,24 @@ public class MainActivity extends AppCompatActivity implements WeatherServiceCal
         temperatureView=(TextView)findViewById(R.id.temperature);
         conditionView=(TextView)findViewById(R.id.condition);
         locationView=(TextView)findViewById(R.id.location);
+        changeCity=(EditText) findViewById(R.id.editText);
+        okButton=(Button)findViewById(R.id.button);
         service=new YahooWeatherService(this);
         dialog=new ProgressDialog(this);
-        
+
         dialog.setMessage("Loading...");
         dialog.show();
 
         service.updateWeather("Tehran ,IR");
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.setMessage("Loading...");
+                dialog.show();
+                service.updateWeather(changeCity.getText().toString());
+            }
+        });
 
     }
 
