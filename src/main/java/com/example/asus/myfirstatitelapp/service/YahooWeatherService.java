@@ -29,6 +29,7 @@ public class YahooWeatherService {
             protected String doInBackground(String... strings) {
                 return null;
             }
+
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);

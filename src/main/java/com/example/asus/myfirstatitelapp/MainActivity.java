@@ -1,5 +1,6 @@
 package com.example.asus.myfirstatitelapp;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements WeatherServiceCal
     private TextView condition;
     private TextView location;
     private YahooWeatherService service;
+    private ProgressDialog dialog;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -24,12 +26,15 @@ public class MainActivity extends AppCompatActivity implements WeatherServiceCal
         condition=(TextView)findViewById(R.id.condition);
         location=(TextView)findViewById(R.id.location);
         service=new YahooWeatherService(this);
+        dialog=new ProgressDialog(this);
+        dialog.setMessage("Loading...");
+        dialog.show();
         service.updateWeather("Tehran ,IR");
     }
 
     @Override
     public void serviceSuccess(Channel channel) {
-
+        dialog.hide();
     }
 
     @Override
