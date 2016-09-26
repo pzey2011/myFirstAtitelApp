@@ -1,6 +1,7 @@
 package com.example.asus.myfirstatitelapp;
 
 import android.app.ProgressDialog;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -12,19 +13,19 @@ import com.example.asus.myfirstatitelapp.service.WeatherServiceCallback;
 import com.example.asus.myfirstatitelapp.service.YahooWeatherService;
 
 public class MainActivity extends AppCompatActivity implements WeatherServiceCallback {
-    private ImageView weatherIcon;
-    private TextView temperature;
-    private TextView condition;
-    private TextView location;
+    private ImageView weatherImage;
+    private TextView temperatureView;
+    private TextView conditionView;
+    private TextView locationView;
     private YahooWeatherService service;
     private ProgressDialog dialog;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        weatherIcon=(ImageView)findViewById(R.id.weatherIcon);
-        temperature=(TextView)findViewById(R.id.temperature);
-        condition=(TextView)findViewById(R.id.condition);
-        location=(TextView)findViewById(R.id.location);
+        weatherImage=(ImageView)findViewById(R.id.weatherIcon);
+        temperatureView=(TextView)findViewById(R.id.temperature);
+        conditionView=(TextView)findViewById(R.id.condition);
+        locationView=(TextView)findViewById(R.id.location);
         service=new YahooWeatherService(this);
         dialog=new ProgressDialog(this);
         dialog.setMessage("Loading...");
@@ -35,6 +36,13 @@ public class MainActivity extends AppCompatActivity implements WeatherServiceCal
     @Override
     public void serviceSuccess(Channel channel) {
         dialog.hide();
+        int iconNumber= getResources().getIdentifier("@drawable/"+channel.getItem().getCondition().getCode(),null,getPackageName());
+        @SuppressWarnings("deprecation")
+        Drawable weatherIcon= getResources().getDrawable(iconNumber);
+        weatherImage.setImageDrawable(weatherIcon);
+        temperatureView.setText(channel.getItem().getCondition().getTemperature()+"\u00B0"+channel.getUnits().getUnit());
+        conditionView.setText(channel.getItem().getCondition().getDiscription());
+        locationView.setText(service.getLocation());
     }
 
     @Override
