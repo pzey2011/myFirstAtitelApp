@@ -9,6 +9,7 @@ public class Units implements JSONParser {
     private String unit;
     @Override
     public void parse(JSONObject data) {
+        unit=new String("");
         unit= data.optString("temperature");
     }
 

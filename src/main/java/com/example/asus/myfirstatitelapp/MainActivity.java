@@ -19,6 +19,12 @@ public class MainActivity extends AppCompatActivity implements WeatherServiceCal
     private TextView locationView;
     private YahooWeatherService service;
     private ProgressDialog dialog;
+
+    public ProgressDialog getDialog() {
+        return dialog;
+    }
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -28,15 +34,18 @@ public class MainActivity extends AppCompatActivity implements WeatherServiceCal
         locationView=(TextView)findViewById(R.id.location);
         service=new YahooWeatherService(this);
         dialog=new ProgressDialog(this);
+        
         dialog.setMessage("Loading...");
         dialog.show();
+
         service.updateWeather("Tehran ,IR");
+
     }
 
     @Override
     public void serviceSuccess(Channel channel) {
         dialog.hide();
-        int iconNumber= getResources().getIdentifier("@drawable/"+channel.getItem().getCondition().getCode(),null,getPackageName());
+        int iconNumber= getResources().getIdentifier("@drawable/icon"+channel.getItem().getCondition().getCode(),null,getPackageName());
         @SuppressWarnings("deprecation")
         Drawable weatherIcon= getResources().getDrawable(iconNumber);
         weatherImage.setImageDrawable(weatherIcon);

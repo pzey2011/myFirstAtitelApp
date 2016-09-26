@@ -20,6 +20,7 @@ public class Channel implements JSONParser{
     @Override
     public void parse(JSONObject data) {
         units = new Units();
+        item=new Item();
         units.parse(data.optJSONObject("units"));
         item.parse(data.optJSONObject("item"));
     }

@@ -25,6 +25,7 @@ public class Condition implements JSONParser {
     @Override
     public void parse(JSONObject data) {
         code= data.optInt("code");
+        discription=new String("");
         temperature = data.optInt("temp");
         discription=data.optString("text");
     }

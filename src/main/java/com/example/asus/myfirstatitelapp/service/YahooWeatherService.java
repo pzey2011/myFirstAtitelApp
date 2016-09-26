@@ -1,8 +1,11 @@
 package com.example.asus.myfirstatitelapp.service;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
+import com.example.asus.myfirstatitelapp.MainActivity;
 import com.example.asus.myfirstatitelapp.data.Channel;
 
 import org.json.JSONException;
@@ -38,12 +41,12 @@ public class YahooWeatherService {
     public void updateWeather(String l)
     {
         this.location=l;
-        new AsyncTask<String, Void, String>() {
+       new AsyncTask<String, Void, String>() {
 
             @Override
             protected String doInBackground(String... strings) {
-                String YahooQuery=String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"&s\")",location);
-                String urlString=String.format("https://query.yahooapis.com/v1/public/yql?q=&s&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys", Uri.encode(YahooQuery));
+                String YahooQuery=String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\")",location);
+                String urlString=String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YahooQuery));
                 try {
                     URL url=new URL(urlString);
                     URLConnection conn=url.openConnection();
@@ -55,6 +58,7 @@ public class YahooWeatherService {
                     {
                         sb.append(line);
                     }
+
                     return sb.toString();
                 } catch (Exception e) {
                     exception=e;
@@ -73,14 +77,14 @@ public class YahooWeatherService {
                     JSONObject responseJSON=new JSONObject(s);//parse the JSON GET response string
                     JSONObject query=responseJSON.optJSONObject("query");
                     int count=query.optInt("count");
-                    if(count==0)
+                   if(count==0)
                     {
                         callback.serviceFailure(new Exception("No weather informations found for"+location));
                         return;
                     }
                     Channel channel=new Channel();
-                    channel.parse(query.optJSONObject("results").optJSONObject("channel"));
-                    callback.serviceSuccess(channel);
+                   channel.parse(query.optJSONObject("results").optJSONObject("channel"));
+                   callback.serviceSuccess(channel);
 
                 }
                 catch (JSONException e) {
