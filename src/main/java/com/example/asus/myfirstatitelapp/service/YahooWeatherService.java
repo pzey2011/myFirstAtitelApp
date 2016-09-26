@@ -3,6 +3,11 @@ package com.example.asus.myfirstatitelapp.service;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.example.asus.myfirstatitelapp.data.Channel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,6 +21,7 @@ import java.net.URLConnection;
 public class YahooWeatherService {
     private WeatherServiceCallback callback;
     private String location;
+    private Exception exception;
     public void setLocation(String location) {
         this.location = location;
     }
@@ -51,14 +57,35 @@ public class YahooWeatherService {
                     }
                     return sb.toString();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    exception=e;
                 }
                 return null;
             }
 
             @Override
             protected void onPostExecute(String s) {
-                super.onPostExecute(s);
+                if(s==null && exception!=null)
+                {
+                    callback.serviceFailure(exception);
+                    return;
+                }
+                try {
+                    JSONObject responseJSON=new JSONObject(s);//parse the JSON GET response string
+                    JSONObject query=responseJSON.optJSONObject("query");
+                    int count=query.optInt("count");
+                    if(count==0)
+                    {
+                        callback.serviceFailure(new Exception("No weather informations found for"+location));
+                        return;
+                    }
+                    Channel channel=new Channel();
+                    channel.parse(query.optJSONObject("results").optJSONObject("channel"));
+                    callback.serviceSuccess(channel);
+
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }.execute(location);
     }

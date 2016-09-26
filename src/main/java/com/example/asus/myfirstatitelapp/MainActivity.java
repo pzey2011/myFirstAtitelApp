@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements WeatherServiceCal
 
     @Override
     public void serviceFailure(Exception exception) {
+        dialog.hide();
         Toast.makeText(this,exception.getMessage(),Toast.LENGTH_LONG).show();
     }
 }
