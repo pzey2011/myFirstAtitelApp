@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements WeatherServiceCal
         weatherImage.setImageDrawable(weatherIcon);
         temperatureView.setText(channel.getItem().getCondition().getTemperature()+"\u00B0"+channel.getUnits().getUnit());
         conditionView.setText(channel.getItem().getCondition().getDiscription());
-        locationView.setText(service.getLocation());
+        locationView.setText(channel.getLocation().getCity()+", "+channel.getLocation().getRegion()+" "+channel.getLocation().getCountry());
     }
 
     @Override
