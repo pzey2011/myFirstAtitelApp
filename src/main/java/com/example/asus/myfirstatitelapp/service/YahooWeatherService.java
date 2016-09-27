@@ -45,7 +45,7 @@ public class YahooWeatherService {
 
             @Override
             protected String doInBackground(String... strings) {
-                String YahooQuery=String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\")",location);
+                String YahooQuery=String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\") and u='c'",location);
                 String urlString=String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YahooQuery));
                 try {
                     URL url=new URL(urlString);
@@ -90,7 +90,7 @@ public class YahooWeatherService {
                 catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
+                }
         }.execute(location);
     }
 }
